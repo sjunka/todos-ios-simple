@@ -1,24 +1,20 @@
-//  Todo.swift
+//  Todos/Models/Todo.swift
 //  ---------------------------------------------------------------------------
-//  QUÉ ES
-//  El modelo de datos. Una sola clase: toda la capa de persistencia del app.
+//  EL MODELO. Una sola clase: toda la capa de persistencia del app.
 //
-//  FLUJO DE DATOS
-//  El usuario escribe en un TextField de TodoListView, que está enlazado
-//  directamente a una propiedad de esta clase. @Model reescribe la clase en
-//  tiempo de compilación para que cada propiedad almacenada sea:
+//  @Model reescribe la clase en compilación para que cada propiedad sea:
 //    1. una columna en un archivo SQLite en disco,
 //    2. observable por SwiftUI (cambiarla redibuja la vista),
 //    3. guardada sola en el siguiente autosave.
 //  O sea: escribir en memoria ES escribir en disco. No hay paso intermedio.
 //
 //  QUIÉN LO USA
-//  TodosApp lo registra en el contenedor. TodoListView lo consulta con @Query.
-//  CRUDCheck lo prueba contra un contenedor en memoria.
+//    App/TodosApp.swift        lo registra en el contenedor
+//    Views/TodoListView.swift  lo consulta con @Query y lo muta
+//    CRUDCheck.swift           lo prueba contra un contenedor en memoria
 //
-//  QUÉ SE ESPERA
-//  Que este archivo casi nunca cambie. Un todo es un título, un check y una
-//  fecha; agregar campos aquí es la única forma correcta de crecer el modelo.
+//  Este archivo casi nunca cambia. Agregar campos aquí es la única forma
+//  correcta de crecer el modelo.
 //  ---------------------------------------------------------------------------
 
 import Foundation                                  // Date, el único tipo de Foundation que se usa aquí
@@ -49,8 +45,8 @@ final class Todo {                                 // final: nadie hereda de est
 
 //  ---------------------------------------------------------------------------
 //  QUÉ PASA DESPUÉS
-//  Nada, desde este archivo. Es un modelo puro: no navega, no dibuja, no llama
-//  a nadie. Solo lo llaman a él.
+//  Nada, desde este archivo. Modelo puro: no navega, no dibuja, no llama a
+//  nadie. Solo lo llaman a él.
 //
 //  Al insertar una instancia en el ModelContext (TodoListView.create), SwiftData
 //  la escribe y notifica a todos los @Query activos, que redibujan la lista.

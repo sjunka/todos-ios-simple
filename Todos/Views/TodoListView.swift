@@ -1,10 +1,9 @@
-//  TodoListView.swift
+//  Todos/Views/TodoListView.swift
 //  ---------------------------------------------------------------------------
-//  QUÉ ES
-//  Toda la interfaz y las cuatro operaciones CRUD, en un archivo.
+//  LA UI COMPLETA y las cuatro operaciones CRUD.
 //  Dos vistas: TodoListView (la pantalla) y TodoRow (una fila).
 //
-//  FLUJO DE DATOS — el ciclo completo, en un solo sentido y de vuelta
+//  FLUJO DE DATOS — el ciclo completo, ida y vuelta
 //
 //    SwiftData (SQLite)
 //         │  @Query lee y se suscribe
@@ -31,12 +30,11 @@
 //    Delete  — delete(at:) por swipe, y el .onChange que limpia filas vacías.
 //
 //  QUIÉN LO USA
-//  TodosApp lo pone como raíz del WindowGroup. TodoRow es privada: solo la usa
-//  el ForEach de este mismo archivo.
+//  App/TodosApp.swift lo pone como raíz del WindowGroup. TodoRow es privada:
+//  solo la usa el ForEach de este mismo archivo.
 //
-//  QUÉ SE ESPERA
-//  No hay view model. @Query y @Bindable ya son la conexión observable y
-//  escribible contra el almacenamiento; una capa en medio solo reenviaría.
+//  Sin view model: @Query y @Bindable YA son la conexión observable y escribible
+//  contra el almacenamiento. Una capa en medio solo reenviaría mensajes.
 //  ---------------------------------------------------------------------------
 
 import SwiftUI                                     // View, List, NavigationStack
@@ -175,10 +173,10 @@ private struct TodoRow: View {                     // private: nadie fuera de es
 //  pantalla de detalle que abrir.
 //
 //  Quién llama a quién:
-//    TodosApp        -> TodoListView   (raíz del WindowGroup)
-//    TodoListView    -> TodoRow        (una por cada todo del @Query)
-//    TodoRow         -> Todo           (muta title / isDone directo)
-//    ambas           -> modelContext   (insert / delete)
+//    App/TodosApp     -> TodoListView   (raíz del WindowGroup)
+//    TodoListView     -> TodoRow        (una por cada todo del @Query)
+//    TodoRow          -> Models/Todo    (muta title / isDone directo)
+//    ambas            -> modelContext   (insert / delete)
 //
 //  Si algún día hay pantalla de detalle, va aquí: envolver la fila en un
 //  NavigationLink y el NavigationStack ya está puesto para empujarla.

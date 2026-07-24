@@ -1,20 +1,31 @@
 # Todos
 
 A deliberately small iOS todo app. SwiftUI + SwiftData, Swift 6, iOS 26. No
-dependencies, no view models, no architecture diagram — except the one below,
-which is the whole thing.
+dependencies, no view models.
 
-## Files
+## Architecture
 
-| File | What it is |
-|---|---|
-| `Todos/Todo.swift` | The `@Model` class. The entire persistence layer. |
-| `Todos/TodosApp.swift` | App entry point: one window, one model container, dark mode. |
-| `Todos/TodoListView.swift` | The whole UI and all four CRUD operations. |
-| `CRUDCheck.swift` | Standalone assert-based check. Not in the app target. |
+Grouped by type — the standard layout for a small app (under ~10 screens).
+Past that, regroup by feature so one change touches one folder.
 
-Every file opens with what it is, how data flows through it, and who calls it —
-and closes with what happens next.
+```
+Todos/
+├── App/        TodosApp.swift        entry point, opens the database
+├── Models/     Todo.swift            @Model class, the persistence layer
+└── Views/      TodoListView.swift    the screen + TodoRow
+CRUDCheck.swift                       standalone check, outside the app target
+```
+
+`Services/` (API clients, Keychain, etc.) goes next to `Models/` — it appears
+when there's a first service to put in it, not before.
+
+Xcode picks these folders up automatically: the target uses a file-system
+synchronized group, so adding a file to disk adds it to the build. No
+`project.pbxproj` edits.
+
+Every file opens with what it is and how data flows through it, carries a short
+comment per meaningful line, and closes with what happens next. **Comments are
+in Spanish**, README in English.
 
 ## Data flow
 
@@ -22,20 +33,22 @@ and closes with what happens next.
 flowchart TD
     OS([iOS launches the app]) --> App
 
-    subgraph setup [Startup]
+    subgraph setup [App/]
         App["<b>TodosApp</b><br/>@main"]
         DB[("<b>SwiftData</b><br/>SQLite on disk")]
         App -- ".modelContainer(for: Todo.self)<br/>opens the store" --> DB
         App -- "injects ModelContext<br/>into the Environment" --> List
     end
 
-    subgraph screen [The only screen]
+    subgraph views [Views/]
         List["<b>TodoListView</b><br/>@Query todos"]
         Row["<b>TodoRow</b><br/>@Bindable todo"]
         List -- "ForEach: one row per todo" --> Row
     end
 
-    Model["<b>Todo</b><br/>title · isDone · createdAt"]
+    subgraph models [Models/]
+        Model["<b>Todo</b><br/>title · isDone · createdAt"]
+    end
 
     DB -- "① READ<br/>@Query streams rows in<br/>and re-renders on change" --> List
     List -- "② CREATE — context.insert()<br/>④ DELETE — context.delete()" --> DB
@@ -65,8 +78,7 @@ is no layer in between — `@Query` and `@Bindable` *are* the wiring.
 ## Design
 
 Near-black canvas, warm paper-white text, one ember accent, New York serif for
-body text. Four colors total, defined in the `Ink` enum at the top of
-`TodoListView.swift`.
+body text. Four colors total, in the `Ink` enum at the top of `TodoListView.swift`.
 
 ## Run
 
@@ -84,6 +96,6 @@ xcodebuild -project Todos.xcodeproj -scheme Todos \
 ## Check
 
 ```sh
-swiftc -o /tmp/crudcheck -parse-as-library Todos/Todo.swift CRUDCheck.swift && /tmp/crudcheck
+swiftc -o /tmp/crudcheck -parse-as-library Todos/Models/Todo.swift CRUDCheck.swift && /tmp/crudcheck
 # CRUD ok
 ```
