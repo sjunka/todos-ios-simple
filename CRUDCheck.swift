@@ -47,22 +47,22 @@ func check() throws {
     let all = FetchDescriptor<Todo>(sortBy: [SortDescriptor(\.createdAt)])  // mismo orden que el @Query de la lista
 
     // CREATE
-    let todo = Todo(title: "buy milk")             // nace con título, a diferencia del app (que crea en blanco)
+    let todo = Todo(title: "comprar leche")             // nace con título, a diferencia del app (que crea en blanco)
     context.insert(todo)                           // lo que hace el botón +
-    assert(try! context.fetch(all).count == 1, "insert did not land")  // relee de la base: no confía en la variable
+    assert(try! context.fetch(all).count == 1, "el insert no llegó a la base")  // relee de la base: no confía en la variable
 
     // READ
-    assert(try! context.fetch(all).first?.title == "buy milk", "wrong todo read back")  // el dato vuelve igual
+    assert(try! context.fetch(all).first?.title == "comprar leche", "el todo releído no es el que se insertó")  // el dato vuelve igual
 
     // UPDATE — los dos campos que la UI puede cambiar.
-    todo.title = "buy oat milk"                    // lo que hace escribir en el TextField
+    todo.title = "comprar leche de avena"                    // lo que hace escribir en el TextField
     todo.isDone = true                             // lo que hace tocar el círculo
     let updated = try context.fetch(all)[0]        // relectura: prueba que se guardó, no solo que mutó
-    assert(updated.title == "buy oat milk" && updated.isDone, "update not persisted")
+    assert(updated.title == "comprar leche de avena" && updated.isDone, "el update no se persistió")
 
     // DELETE
     context.delete(todo)                           // lo que hace el swipe
-    assert(try! context.fetch(all).isEmpty, "delete did not remove the todo")  // no quedan restos
+    assert(try! context.fetch(all).isEmpty, "el delete no borró el todo")  // no quedan restos
 
     print("CRUD ok")                               // única salida en caso feliz: silencio es sospechoso
 }
