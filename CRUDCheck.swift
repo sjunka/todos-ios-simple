@@ -1,10 +1,8 @@
 //  CRUDCheck.swift
 //  ---------------------------------------------------------------------------
-//  QUÉ ES
-//  La única prueba corrible del proyecto. No usa XCTest ni framework alguno:
-//  es un ejecutable que imprime "CRUD ok" o revienta en el primer assert falso.
+//  LA ÚNICA PRUEBA CORRIBLE. Sin XCTest ni frameworks: un ejecutable que
+//  imprime "CRUD ok" o revienta en el primer assert falso.
 //
-//  FLUJO DE DATOS
 //  Recorre el mismo camino que la UI, pero sin UI:
 //
 //    ModelContainer en memoria   (lo que en el app es el archivo SQLite)
@@ -22,12 +20,11 @@
 //  Xcode compila la carpeta Todos/ entera (grupo sincronizado con el sistema de
 //  archivos). Dejar esta prueba afuera es lo que impide que entre al binario.
 //
-//  QUÉ SE ESPERA
-//  Que si SwiftData deja de persistir alguna mutación, esto falle antes que el
+//  Si SwiftData deja de persistir alguna mutación, esto falla antes que el
 //  simulador y sin tener que tocar la pantalla.
 //
 //  Correr:
-//    swiftc -o /tmp/crudcheck -parse-as-library Todos/Todo.swift CRUDCheck.swift
+//    swiftc -o /tmp/crudcheck -parse-as-library Todos/Models/Todo.swift CRUDCheck.swift
 //    /tmp/crudcheck
 //  ---------------------------------------------------------------------------
 
